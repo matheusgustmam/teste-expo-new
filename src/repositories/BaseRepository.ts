@@ -1,23 +1,23 @@
-import { addDoc, collection, CollectionReference, deleteDoc, doc, getDoc,  getDocs, query, setDoc, where, WhereFilterOp } from "firebase/firestore"
+import { addDoc, collection, CollectionReference, deleteDoc, doc, getDoc, getDocs, query, setDoc, where, WhereFilterOp } from "firebase/firestore";
 import BaseModel from "../models/BaseModel";
-import firebaseConverter from "../converters/firebaseConveter";
+import firebaseConverter from "../converters/firebaseConverter";
 import { db } from "../../firebase-init";
 
 export abstract class BaseRepository<T extends BaseModel> {
     private collectionRef: CollectionReference;
 
     constructor(collectionName: string, ModelClass: new () => T) {
-        const converter = firebaseConverter(ModelClass)
+        const converter = firebaseConverter<T>(ModelClass)
         this.collectionRef = collection(db, collectionName).withConverter(converter)
     }
     
-    async salvar(entidade: T): Promise<void> {
+    async salvar(entidade: T): Promise<T> {
         if (entidade.getId()) {
             const docRef = doc(this.collectionRef, entidade.getId())
             await setDoc(docRef, entidade)
             return entidade
-        }else {
-            const docRef = addDoc(this.collectionRef, entidade)
+        } else {
+            await addDoc(this.collectionRef, entidade)
             return entidade
         }
 

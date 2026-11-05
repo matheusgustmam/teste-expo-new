@@ -17,7 +17,7 @@ export default abstract class BaseModel {
     fromFirestore(snapshot: any, options?: any): BaseModel {
         const dados = snapshot.data(options);
         this.id = snapshot.id;
-        this.criadoEm = dados.criadoEM
+        this.criadoEm = dados.criadoEm
         this.atualizadoEm = dados.atualizadoEm
         return this
     }
@@ -34,5 +34,12 @@ export default abstract class BaseModel {
         return this.atualizadoEm
     }
 
+    setId(id: string) {
+        this.id = id
+    }
+
+    setAtualizadoEm(atualizadoEm: Date) {
+        this.atualizadoEm = atualizadoEm
+    }
 
 }
