@@ -2,7 +2,7 @@ import { ScrollView } from "react-native";
 import {Button, Card, Text, TextInput } from "react-native-paper";
 import { useState } from "react";
 import useAuthService from "../services/loginService";
-import { useNavigation } from "@react-navigation/nitive";
+import { useNavigation } from "@react-navigation/native";
 import Usuario from "../models/Usuario";
 import { Endereco } from "../models/Endereco";
 
