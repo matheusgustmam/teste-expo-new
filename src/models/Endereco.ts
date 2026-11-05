@@ -4,9 +4,9 @@ export class Endereco {
     private numero: string;
 
     constructor(dados?: any) {
-        this.cep = dados?.cep || '';
-        this.logradouro = dados?.logradouro || '';
-        this.numero = dados?.numero || '';
+        this.cep = dados?.cep || null
+        this.logradouro = dados?.logradouro || null
+        this.numero = dados?.numero || null
     }
 
     toFirestore(): any {

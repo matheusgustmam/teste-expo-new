@@ -3,13 +3,22 @@ import { Button , Text, TextInput, Card } from "react-native-paper";
 import useAuthService from "../services/loginService";
 import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
+import Usuario from "../models/Usuario";
 
 function PageLogin() {
-    const [usuario, setUsuario] = useState({})
+    const [usuario, setUsuario] = useState(new Usuario())
     const [secureText, setSecureText] = useState(true)
     const [loading, setLoading] = useState(false)
     const { loginEmailSenha, recuperarSenha } = useAuthService();
     const navigation = useNavigation()
+
+    function handleChangeText(campo, texto) {
+        const novoUsuario = new Usuario({
+            ...usuario,
+            [campo]: texto
+        })
+        setUsuario(novoUsuario)
+    }
 
     async function logarUsuario() {
         try {
@@ -42,14 +51,14 @@ function PageLogin() {
                     <TextInput 
                         label="E-mail"
                         placeholder="Insira seu e-mail" 
-                        value={usuario.email} 
-                        onChangeText={(text) => setUsuario({ ...usuario, email: text})} />
+                        value={usuario.getEmail()} 
+                        onChangeText={(text) => handleOnChangeText("email", text)} />
                     <TextInput 
                         label="Senha" 
                         placeholder="Insira sua senha."
-                        value={usuario.senha}
+                        value={usuario.getSenha()}
                         secureTextEntry={secureText}
-                        onChangeText={(text) => setUsuario({ ...usuario, senha: text})}
+                        onChangeText={(text) => handleOnChangeText("senha", text)}
                         right={<TextInput.Icon icon="eye" onPress={() => setSecureText(!secureText)} />}
                         />
                     <Button loading={loading} onPress={() => logarUsuario()}>Entrar</Button>
