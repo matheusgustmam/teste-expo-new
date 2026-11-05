@@ -9,15 +9,15 @@ export default class Usuario extends BaseModel {
 
     constructor(dados?: any) {
         super(dados)
-        this.nome = dados?.nome || '';
-        this.email = dados?.email || '';
-        this.senha = dados?.senha || '';
+        this.nome = dados?.nome || null
+        this.email = dados?.email || null
+        this.senha = dados?.senha || null
         this.endereco = dados?.endereco || new Endereco();
     }
 
     override toFirestore(): any {
         const { senha, ...dados } = this;
-        return {dados, endereco: this.endereco.toFirestore()}
+        return { ...dados, endereco: this.endereco.toFirestore()}
     }
 
     override fromFirestore(snapshot: any, options: any): Usuario {
