@@ -6,12 +6,14 @@ export default class Usuario extends BaseModel {
     private email: string
     private senha: string
     private endereco: Endereco
+    private telefone: string;
 
     constructor(dados?: any) {
         super(dados)
         this.nome = dados?.nome || null
         this.email = dados?.email || null
         this.senha = dados?.senha || null
+        this.telefone = dados?.telefone || null;
         this.endereco = dados?.endereco || new Endereco();
     }
 
@@ -25,6 +27,7 @@ export default class Usuario extends BaseModel {
         const dados = snapshot.data(options);
         this.nome = dados.nome
         this.email = dados.email
+        this.telefone = dados.telefone;
         this.endereco = new Endereco(dados.endereco)
         return this
     }
@@ -39,5 +42,8 @@ export default class Usuario extends BaseModel {
     }
     getEndereco() {
         return this.endereco
+    }
+    getTelefone() {
+        return this.telefone;
     }
 }

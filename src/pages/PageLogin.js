@@ -33,16 +33,24 @@ function PageLogin() {
     }
     
     async function recuperarSenhaUsuario() {
-        try {
-            setLoading(true)
-            await recuperarSenha(usuario)
-            alert("E-mail de recuperação enviado com sucesso!")
-        } catch (error) {
-            alert("Erro ao enviar e-mail de recuperação: " + error.message)
-        } finally {
-            setLoading(false)
+    try {
+        if (!usuario.getEmail()) {
+            alert("Digite seu e-mail primeiro!");
+            return;
         }
+
+        setLoading(true);
+
+        await recuperarSenha(usuario.getEmail());
+
+        alert("E-mail de recuperação enviado com sucesso!");
+
+    } catch (error) {
+        alert("Erro ao enviar e-mail de recuperação: " + error.message);
+    } finally {
+        setLoading(false);
     }
+}
     
     return (
         <ScrollView>
@@ -51,17 +59,19 @@ function PageLogin() {
                     <TextInput 
                         label="E-mail"
                         placeholder="Insira seu e-mail" 
-                        value={usuario.getEmail()} 
+                        value={usuario.getEmail()}
+                        autoCapitalize="none"
                         onChangeText={(text) => handleChangeText("email", text)} />
                     <TextInput 
                         label="Senha" 
                         placeholder="Insira sua senha."
                         value={usuario.getSenha()}
                         secureTextEntry={secureText}
+                        autoCapitalize="none"
                         onChangeText={(text) => handleChangeText("senha", text)}
                         right={<TextInput.Icon icon="eye" onPress={() => setSecureText(!secureText)} />}
                         />
-                    <Button loading={loading} onPress={() => logarUsuario()}>Entrar</Button>
+                    <Button loading={loading} disabled={loading} onPress={() => logarUsuario()}>Entrar</Button>
                     <Text>Esqueceu sua senha?</Text>
                     <Button loading={loading} onPress={() => recuperarSenhaUsuario()}>Recuperar senha</Button>
                     <Text>Não tem cadastro? </Text>

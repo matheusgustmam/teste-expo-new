@@ -13,12 +13,12 @@ export abstract class BaseRepository<T extends BaseModel> {
     
     async salvar(entidade: T): Promise<T> {
         if (entidade.getId()) {
-            const docRef = doc(this.collectionRef, entidade.getId())
-            await setDoc(docRef, entidade)
-            return entidade
+            const docRef = doc(this.collectionRef, entidade.getId());
+            await setDoc(docRef, entidade);
+            return entidade;
         } else {
             await addDoc(this.collectionRef, entidade)
-            return entidade
+            return entidade;
         }
 
     }

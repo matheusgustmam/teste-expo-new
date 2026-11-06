@@ -10,16 +10,23 @@ export default abstract class BaseModel {
     }
 
     toFirestore(): any {
-        const { ...dados } = this;
-        return dados
+        const { id, ...dados } = this;
+        return dados;
     }
 
     fromFirestore(snapshot: any, options?: any): BaseModel {
-        const dados = snapshot.data(options);
-        this.id = snapshot.id;
-        this.criadoEm = dados.criadoEm
-        this.atualizadoEm = dados.atualizadoEm
-        return this
+    const dados = snapshot.data(options);
+    const converterData = (valor: any): Date => {
+        if (valor?.toDate) {
+            return valor.toDate();
+        }
+
+        return valor instanceof Date ? valor : new Date();
+    };
+    this.id = snapshot.id;
+    this.criadoEm = converterData(dados.criadoEm);
+    this.atualizadoEm = converterData(dados.atualizadoEm);
+    return this;
     }
 
     getId() {

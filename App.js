@@ -1,7 +1,10 @@
+import { useEffect, useState } from "react";
 
-import { PaperProvider } from "react-native-paper";
+import { ActivityIndicator, PaperProvider } from "react-native-paper";
+import { View } from "react-native";
+
 import { NavigationContainer } from "@react-navigation/native";
-import { useEffect } from "react";
+
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "./firebase-init";
 
@@ -19,55 +22,81 @@ import {
 import useAuthService from "./src/services/loginService";
 
 function AppContent() {
+
     const dispatch = useDispatch();
 
     const usuarioLogado = useSelector(
         (state) => state.usuarioLogado?.usuarioLogado
     );
 
+    const [carregando, setCarregando] = useState(true);
+
     const { buscarUsuario } = useAuthService();
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, async (usuario) => {
-            if (usuario && usuario.emailVerified) {
-                try {
-                    const usuarioBusca = await buscarUsuario(usuario.uid);
 
-                    if (usuarioBusca) {
-                        dispatch(setUsuarioLogado(usuarioBusca));
+        const unsubscribe = onAuthStateChanged(
+            auth,
+            async (usuario) => {
+                try {
+                    if (usuario && usuario.emailVerified) {
+
+                        const usuarioBusca = await buscarUsuario(
+                            usuario.uid
+                        );
+
+                        if (usuarioBusca) {
+                            dispatch(setUsuarioLogado(usuarioBusca));
+                        } else {
+                            dispatch(removerUsuarioLogado());
+                            await signOut(auth);
+                        }
                     } else {
-                        alert("Dados não localizados no banco. Tente novamente mais tarde.");
                         dispatch(removerUsuarioLogado());
                     }
                 } catch (error) {
-                    console.log("Erro ao buscar usuário:", error);
+                    console.log(
+                        "Erro ao verificar autenticação:",
+                        error
+                    );
                     dispatch(removerUsuarioLogado());
+                    await signOut(auth);
+                } finally {
+                    setCarregando(false);
                 }
-            } else {
-                dispatch(removerUsuarioLogado());
             }
-        });
-
+        );
         return unsubscribe;
+
     }, [dispatch]);
 
     async function deslogar() {
         try {
             await signOut(auth);
-        } catch (err) {
-            alert("Erro ao deslogar: " + err.message);
+        } catch (error) {
+            alert("Erro ao deslogar: " + error.message);
         }
+    }
+
+    if (carregando) {
+        return (
+            <View style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center"
+            }}>
+                <ActivityIndicator size="large" />
+            </View>
+        );
     }
 
     return (
         <NavigationContainer>
-            <PaperProvider>
-                {usuarioLogado ? (
-                    <DrawerNavigator deslogar={deslogar} />
-                ) : (
-                    <LoginStackNavigator />
-                )}
-            </PaperProvider>
+            {usuarioLogado ? (
+                <DrawerNavigator deslogar={deslogar} />
+            ) : (
+                <LoginStackNavigator />
+            )}
         </NavigationContainer>
     );
 }
@@ -75,7 +104,9 @@ function AppContent() {
 export default function App() {
     return (
         <Provider store={store}>
-            <AppContent />
+            <PaperProvider>
+                <AppContent />
+            </PaperProvider>
         </Provider>
     );
 }

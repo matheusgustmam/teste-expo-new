@@ -26,14 +26,10 @@ function PageCadastro() {
         const novoEndereco = new Endereco({
             ...endereco, [campo]: texto
         })
-        setEndereco(novoEndereco)
-    }
-
-    
+        setEndereco(novoEndereco)}
 
     async function cadastrarUsuario(){
-
-        if (!usuario.getSenha() || usuario.getSenha().length < 6) {
+        if (!usuario.getSenha() || usuario.getSenha().length < 6){
         alert("A senha precisa ter pelo menos 6 caracteres!");
         return;
         }
@@ -46,8 +42,8 @@ function PageCadastro() {
             await cadastrarEmailSenha(usuarioCompleto)
             alert("Cadastro realizado com sucesso!")
         } catch (err) {
-            console.error(err)
-            alert("Erro ao cadastrar usuário: ")
+        console.error("Erro completo no cadastro:", err);
+        alert("Erro ao cadastrar usuário: " + err.message);
         } finally {
             setLoading(false)
         }
@@ -65,9 +61,19 @@ function PageCadastro() {
                     />
                     <TextInput 
                         label="E-mail" 
-                        placeholder="Insira seu e-mail" 
-                        value={usuario.getEmail()} 
+                        placeholder="Insira seu e-mail"
+                        value={usuario.getEmail()}
+                        keyboardType="email-address"
+                        autoCapitalize="none"
                         onChangeText={(text) => handleOnChangeTextUsuario("email",text)}
+                    />
+                    <TextInput
+                        label="Telefone"
+                        placeholder="Insira seu telefone"
+                        value={usuario.getTelefone()}
+                        keyboardType="phone-pad"
+                        onChangeText={(text) =>
+                        handleOnChangeTextUsuario("telefone", text)}
                     />
                     <TextInput 
                         label="Senha"
@@ -92,7 +98,6 @@ function PageCadastro() {
             </Card>
         </ScrollView>
     )
-    
     }
 
     export default PageCadastro;
