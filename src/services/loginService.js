@@ -6,7 +6,7 @@ import {
     signOut
 } from "firebase/auth";
 import { auth } from "../../firebase-init";
-import UsuarioRepository from "../repositories/UsuarioRepository";
+import { UsuarioRepository } from "../repositories/UsuarioRepository";
 
 const usuarioRepository = new UsuarioRepository();
 

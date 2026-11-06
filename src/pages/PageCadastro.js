@@ -29,7 +29,15 @@ function PageCadastro() {
         setEndereco(novoEndereco)
     }
 
+    
+
     async function cadastrarUsuario(){
+
+        if (!usuario.getSenha() || usuario.getSenha().length < 6) {
+        alert("A senha precisa ter pelo menos 6 caracteres!");
+        return;
+        }
+        
         try {
             setLoading(true)
             const usuarioCompleto = new Usuario({
@@ -37,7 +45,7 @@ function PageCadastro() {
             })
             await cadastrarEmailSenha(usuarioCompleto)
             alert("Cadastro realizado com sucesso!")
-        } catch (error) {
+        } catch (err) {
             console.error(err)
             alert("Erro ao cadastrar usuário: ")
         } finally {
@@ -75,7 +83,7 @@ function PageCadastro() {
                         label="Logradouro"
                         placeholder="Insira o nome do seu logradouro."
                         value={endereco.getLogradouro()}
-                        onChange={(text) => handleOnChangeTextEndereco("logradouro",text)}
+                        onChangeText={(text) => handleOnChangeTextEndereco("logradouro",text)}
                     />    
                     <Button loading={loading} onPress={() => cadastrarUsuario()}>Cadastrar</Button>
                     <Text>Já possui uma conta?</Text>

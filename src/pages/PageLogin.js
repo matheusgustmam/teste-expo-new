@@ -35,7 +35,7 @@ function PageLogin() {
     async function recuperarSenhaUsuario() {
         try {
             setLoading(true)
-            await recuperarSenha(usuario.email)
+            await recuperarSenha(usuario)
             alert("E-mail de recuperação enviado com sucesso!")
         } catch (error) {
             alert("Erro ao enviar e-mail de recuperação: " + error.message)
@@ -44,7 +44,7 @@ function PageLogin() {
         }
     }
     
-    returm (
+    return (
         <ScrollView>
             <Card>
                 <Card.Content>
@@ -52,13 +52,13 @@ function PageLogin() {
                         label="E-mail"
                         placeholder="Insira seu e-mail" 
                         value={usuario.getEmail()} 
-                        onChangeText={(text) => handleOnChangeText("email", text)} />
+                        onChangeText={(text) => handleChangeText("email", text)} />
                     <TextInput 
                         label="Senha" 
                         placeholder="Insira sua senha."
                         value={usuario.getSenha()}
                         secureTextEntry={secureText}
-                        onChangeText={(text) => handleOnChangeText("senha", text)}
+                        onChangeText={(text) => handleChangeText("senha", text)}
                         right={<TextInput.Icon icon="eye" onPress={() => setSecureText(!secureText)} />}
                         />
                     <Button loading={loading} onPress={() => logarUsuario()}>Entrar</Button>
